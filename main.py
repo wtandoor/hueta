@@ -200,54 +200,54 @@ def diagnostics():
             # Net density
             plt.subplot(2, 2, 1)
             if (itime > 0): plt.cla()
-            plt.plot(xgrid, -(rhoe + rho0), 'r', label='J(x)')
+            plt.plot(xgrid, -(rhoe + rho0), 'r', label='J[A/m^2](x)')
             plt.xlabel('x')
             plt.xlim(0, grid_length)
             plt.ylim(-2 * a0, 2 * a0)
             plt.legend(loc=1)
             # Electric field
-            plt.subplot(2, 2, 2)
-            if (itime > 0): plt.cla()
-            plt.plot(xgrid, Ex, 'b', label='E(x)')
-            plt.xlabel('x')
-            plt.ylim(-2 * a0, 2 * a0)
-            plt.xlim(0, grid_length)
+            # plt.subplot(2, 2, 2)
+            # if (itime > 0): plt.cla()
+            # plt.plot(xgrid, Ex, 'b', label='E(x)')
+            # plt.xlabel('x')
+            # plt.ylim(-2 * a0, 2 * a0)
+            # plt.xlim(0, grid_length)
 
-            plt.legend(loc=1)
+            # plt.legend(loc=1)
 
-            if (iphase > 0):
-                if (np.fmod(itime, iphase) == 0):
-                    # Phase space plots every iphase steps
-                    axScatter = plt.subplot(2, 2, 3)
-                    if (itime > 0): plt.cla()
-                    axScatter.scatter(x, v, marker='.', s=1)
-                    #    axScatter.set_aspect(1.)
-                    axScatter.set_xlim(0, grid_length)
-                    axScatter.set_ylim(-vmax, vmax)
-                    axScatter.set_xlabel('x')
-                    axScatter.set_ylabel('v')
+            # if (iphase > 0):
+            #     if (np.fmod(itime, iphase) == 0):
+            #         # Phase space plots every iphase steps
+            #         axScatter = plt.subplot(2, 2, 3)
+            #         if (itime > 0): plt.cla()
+            #         axScatter.scatter(x, v, marker='.', s=1)
+            #         #    axScatter.set_aspect(1.)
+            #         axScatter.set_xlim(0, grid_length)
+            #         axScatter.set_ylim(-vmax, vmax)
+            #         axScatter.set_xlabel('x')
+            #         axScatter.set_ylabel('v')
 
-            if (ivdist > 0):
-                if (np.fmod(itime, ivdist) == 0):
-                    # Distribution function plots every ivdist steps
-                    fv = np.zeros(nvbin + 1)  # zero distn fn
-                    dv = 2 * vmax / nvbin  # bin separation */
-                    for i in range(npart):
-                        vax = (v[i] + vmax) / dv  # norm. velocity */
-                        iv = int(vax) + 1  # bin index */
-                        if (iv <= nvbin and iv > 0): fv[iv] += 1  # /* increment dist. fn if within range
+            # if (ivdist > 0):
+            #     if (np.fmod(itime, ivdist) == 0):
+            #         # Distribution function plots every ivdist steps
+            #         fv = np.zeros(nvbin + 1)  # zero distn fn
+            #         dv = 2 * vmax / nvbin  # bin separation */
+            #         for i in range(npart):
+            #             vax = (v[i] + vmax) / dv  # norm. velocity */
+            #             iv = int(vax) + 1  # bin index */
+            #             if (iv <= nvbin and iv > 0): fv[iv] += 1  # /* increment dist. fn if within range
 
-                    plt.subplot(2, 2, 4)
-                    if (itime > 0): plt.cla()
-                    vgrid = dv * np.arange(nvbin + 1) - vmax
-                    plt.plot(vgrid, fv, 'g', label='f(v)')
-                    plt.xlabel('v')
-                    plt.xlim(-vmax, vmax)
-                    #        plt.ylim(-2*a0,2*a0)
-                    plt.legend(loc=1)
-                    fn_vdist = 'vdist_%0*d' % (5, itime)
+                    # plt.subplot(2, 2, 4)
+                    # if (itime > 0): plt.cla()
+                    # vgrid = dv * np.arange(nvbin + 1) - vmax
+                    # plt.plot(vgrid, fv, 'g', label='f(v)')
+                    # plt.xlabel('v')
+                    # plt.xlim(-vmax, vmax)
+                    # #        plt.ylim(-2*a0,2*a0)
+                    # plt.legend(loc=1)
+                    # fn_vdist = 'vdist_%0*d' % (5, itime)
 
-                    np.savetxt(fn_vdist, np.column_stack((vgrid, fv)), fmt=('%1.4e', '%1.4e'))  # write to file
+                    # np.savetxt(fn_vdist, np.column_stack((vgrid, fv)), fmt=('%1.4e', '%1.4e'))  # write to file
 
             plt.pause(0.0001)
             plt.draw()
@@ -333,7 +333,7 @@ dx = grid_length / ngrid
 dt = 0.05  # normalised timestep
 q_over_me = -1.0  # electron charge:mass ratio
 rho0 = 1.0  # background ion density
-vte = 0.06  # thermal velocity
+vte = 0.02  # thermal velocity
 nvbin = 50  # bins for f(v) plot
 a0 = 0.1  # perturbation amplitude
 vmax = 0.2  # max velocity for f(v) plot
