@@ -81,7 +81,7 @@ def density(bc_field,qe):
 #==============================================================================
 
 def field():          
-  global rhoe,rhoi,ex,dx,ngrid
+  global rhoe,rhoi,ex,dx,ngrid,phi
   
   rhot=rhoe+rhoi  # сетка плотности заряда на заданном промежутке
   
@@ -90,6 +90,7 @@ def field():
 
   Ex[ngrid]=0.          # нулевое электростатическое поле
   edc = 0.0
+  print(rhoi)
 
   for j in range(ngrid-1,-1,-1):
       Ex[j] = Ex[j+1] - 0.5*( rhot[j] + rhot[j+1] )*dx
@@ -166,25 +167,23 @@ def diagnostics():
         plt.ylim(-2*a0,2*a0)
         plt.legend(loc=1)
     # Электрическое поле
-        # plt.subplot(2, 2, 2)
-        # if (itime >0 ): plt.cla()
-        # plt.plot(xgrid, Ex, 'b', label='Ex')
-        # plt.xlabel('x')
-        # plt.ylim(-2*a0,2*a0)
-        # plt.xlim(0,grid_length)
+        plt.subplot(2, 2, 2)
+        if (itime >0 ): plt.cla()
+        plt.plot(xgrid, Ex, 'b', label='Ex field')
+        plt.xlabel('x')
+        plt.ylim(-2*a0,2*a0)
+        plt.xlim(0,grid_length)
 
         plt.legend(loc=1)
-        
-        # if (iphase > 0):
-        #   if (np.fmod(itime,iphase)==0):  
-        #     axScatter = plt.subplot(2, 2, 3)
-        #     if (itime >0 ): plt.cla()
-        #     axScatter.scatter(x,v,marker='.',s=1)
-        #     axScatter.set_xlim(0,grid_length)
-        #     axScatter.set_ylim(-vmax,vmax)
-        #     axScatter.set_xlabel('x')
-        #     axScatter.set_ylabel('v')
+    # Phi
+        plt.subplot(2,2,4)
+        if (itime>0):plt.cla()
+        plt.plot(xgrid, phi, 'r', label = 'rhoe')
+        plt.xlabel('x')
+        plt.ylim(-100, 400)
+        plt.xlim(0,grid_length)
 
+        plt.legend(loc=1)
         if (ivdist > 0):
           if (np.fmod(itime,ivdist)==0):
     # график функции распределения для каждого шага
@@ -241,7 +240,7 @@ def histories():
     xgrid = dt * np.arange(nsteps + 1)
     plt.figure('Energies')
     plt.plot(xgrid, upot, 'red', label='Epot')
-    plt.plot(xgrid, ukin, 'yellow', label='Ekin')
+    plt.plot(xgrid, ukin, 'green', label='Ekin')
     plt.plot(xgrid, utot, 'black', label='sum')
     plt.xlabel('t')
     plt.ylabel('Energy')
@@ -259,9 +258,9 @@ def histories():
 #==============================================================================
   
 
-npart=10000           # количество частиц
-ngrid=100             # деление межэлектронного расстояния
-nsteps=100           # количество временных шагов на которых проводится вычисление
+npart=2048           # количество частиц
+ngrid=256             # деление межэлектронного расстояния
+nsteps=150           # количество временных шагов на которых проводится вычисление
 
 # particle arrays
 x = np.zeros(npart)  # позиция по x 
@@ -271,7 +270,7 @@ v = np.zeros(npart) # скорость частиц
 rhoe=np.zeros(ngrid+1)        # плотность электронов 
 rhoi=np.zeros(ngrid+1)        # плотность ионов
 Ex=np.zeros(ngrid+1)          # электрическое поле 
-phi=np.zeros(ngrid+1)         # потенциал
+phi=np.zeros(ngrid + 1)         # потенциал
 # time histories
 ukin=np.zeros(nsteps+1) # сохранение кинетической энергии за шаг dt
 upot=np.zeros(nsteps+1) # сохранение потенциальное энергии за шаг dt
@@ -279,18 +278,19 @@ utherm=np.zeros(nsteps+1) # сохранение тепловой скорост
 udrift=np.zeros(nsteps+1) # сохранение скорости дрифта в момент dt
 utot=np.zeros(nsteps+1) # сохранение суммы потенцильной и кинетической энергии за шаг dt
  
-grid_length = 0.1  # межэлектронное расстояние
+grid_length = 4 * np.pi  # межэлектронное расстояние
 plasma_start = 0.           # левая границы плазмы
 plasma_end = grid_length    # правая граница плазмы
 dx = grid_length/ngrid
-dt = 0.05             # dt - изменение времени
+dt = 0.1            # dt - изменение времени
 q_over_me=-1.0       # отношение заряда электрона к массе
 rho0 = 1.0           # плотность ионов
-vte = 0.02           # тепловая скорость
+vte = 1           # тепловая скорость
 nvbin=50            # размер массива графика f(v)
-a0 = 0.1             # амплитуда возмущения
+a0 = 0.5            # амплитуда возмущения
 vmax = 0.2       # максимальная скорость для графика f(v)
 v0=0.0              # скорость возмущения
+e00 = 0.0000000000089
 wall_left=0.
 wall_right=1.
 bc_field = 1       #  поле граничного столкновения
